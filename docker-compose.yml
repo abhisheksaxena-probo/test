@@ -1,0 +1,49 @@
+version: "3.9"
+services:
+  mysqldb:
+    image: "mysql:latest"
+    container_name: mysqlcontainer
+    volumes:
+      - ./mysql:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: contracts
+      MYSQL_USER: temp
+      MYSQL_PASSWORD: MyN3wP4ssw0rd
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_ROOT_HOST: "127.0.0.1"
+    restart: unless-stopped
+    ports:
+      - "3306:3306"
+    expose:
+      - 3306
+    networks:
+      - internalnet
+
+  nodeappone:
+    container_name: nodeappcontainertwo
+    build: .
+    ports:
+      - "3500:3500"
+    environment:
+      NODE_ENV: development
+      MY_SQL_HOST: "127.0.0.1"
+      MY_SQL_USER: root
+      MY_SQL_PASSWORD: password
+      MY_SQL_DB: contracts
+      DB_MASTER_HOST: "127.0.0.1"
+      DB_REPLICAS: "127.0.0.1"
+      DB_POOL_MAX: 5
+      DB_POOL_MIN: 1
+      DB_POOL_IDLE: 10000
+      DB_POOL_LOCK_ACQUIRE: 30000
+      DB_PORT: 3306
+      DB_DIALECT: mysql
+      DB_LOGGING: "false"
+    expose:
+      - 3500
+    networks:
+      - internalnet
+
+networks:
+  internalnet:
+    driver: bridge
