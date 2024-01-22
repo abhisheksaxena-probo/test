@@ -13,4 +13,3 @@ COPY . .
 
 EXPOSE 7050
 
-CMD [ "npm", "start" ]
